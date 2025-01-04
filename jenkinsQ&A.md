@@ -1,31 +1,35 @@
-Q where Jenkins store default password 
-Q who is the user of Jenkins execute sheall  -- Jenkins user
-Q what is the path or working directory of Jenkins shell -- /var/lib/Jenkins/workspace/<job-name>
-Q what is the home directory of Jenkins -- /var/lib/Jenkins 
-Q how you can change plugin in Jenkins -- manage jenkins- system configuration 
-Q what is Global tool configuration
-Q what is manage-plugins 
-Q what is configure global security 
-Q what is manage-credentials 
-Q what is manage users 
-Q what is number of executer in Jenkins 
-Q what is SCm checkout retry count 
-Q what is usecase of rolebase autherisation strategy plugins 
-Q what is the delete workspace before start 
-Q explain build trigger and its types 
-Q what is build autherisation token
-Q what is poll scm 
-Q difference between build periodically and poll SCM 
-Q Envirenment veriables in Jenkins 
-Q what is parameterise job 
-Q what is global veriables and how can we creare custom global veriables.
-Q what is build paremeter and usecase 
-Q types of build parameter
-Q what is timeout in Jenkins job 
-Q how to run parallel jobs in Jenkins or concurrent job in Jenkins
-Q what is workspace in Jenkins and its usecase
-Q what is upstream and downstream in Jenkins 
-Q how artifact management works in Jenkins 
-Q what is master slave in Jenkins and use case
-Q How to achive particular job will run on particular slave node in Jenkins 
-Q What is sheared library in Jenkins
+- **Q:** Where does Jenkins store the default password?
+- **Q:** Who is the user of Jenkins to execute shell?  
+  **A:** Jenkins user
+- **Q:** What is the path or working directory of Jenkins shell?  
+  **A:** `/var/lib/Jenkins/workspace/<job-name>`
+- **Q:** What is the home directory of Jenkins?  
+  **A:** `/var/lib/Jenkins`
+- **Q:** How can you change plugins in Jenkins?  
+  **A:** Manage Jenkins → System Configuration
+- **Q:** What is Global Tool Configuration?
+- **Q:** What is Manage Plugins?
+- **Q:** What is Configure Global Security?
+- **Q:** What is Manage Credentials?
+- **Q:** What is Manage Users?
+- **Q:** What is the number of executors in Jenkins?
+- **Q:** What is SCM Checkout Retry Count?
+- **Q:** What is the use case of Role-Based Authorization Strategy Plugin?
+- **Q:** What is "Delete Workspace Before Start"?
+- **Q:** Explain Build Trigger and its types.
+- **Q:** What is Build Authorization Token?
+- **Q:** What is Poll SCM?
+- **Q:** What is the difference between Build Periodically and Poll SCM?
+- **Q:** What are Environment Variables in Jenkins?
+- **Q:** What is a Parameterized Job?
+- **Q:** What are Global Variables and how can we create custom global variables?
+- **Q:** What is a Build Parameter and its use case?
+- **Q:** Types of Build Parameters.
+- **Q:** What is Timeout in a Jenkins job?
+- **Q:** How to run parallel jobs or concurrent jobs in Jenkins?
+- **Q:** What is Workspace in Jenkins and its use case?
+- **Q:** What is Upstream and Downstream in Jenkins?
+- **Q:** How does Artifact Management work in Jenkins?
+- **Q:** What is Master-Slave in Jenkins and its use case?
+- **Q:** How to achieve a particular job running on a specific slave node in Jenkins?
+- **Q:** What is Shared Library in Jenkins?
