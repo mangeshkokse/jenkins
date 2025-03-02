@@ -33,3 +33,5 @@
 - **Q:** What is Master-Slave in Jenkins and its use case?
 - **Q:** How to achieve a particular job running on a specific slave node in Jenkins?
 - **Q:** What is Shared Library in Jenkins?
+- 
+- https://www.youtube.com/watch?v=Ww-Hh_WdzWw&t=1104s
