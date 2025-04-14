@@ -1,5 +1,6 @@
 # jenkins
 ## Stage-by-Stage Summary
+```mathmetica
 
 - Stage	                              = What it does
 - Git                                 = Checkout	Clones the project from GitHub (main branch) using credentials
@@ -14,3 +15,4 @@
 - Docker Image Scan                   = Runs Trivy security scan on the Docker image
 - Push Docker Image	                  = Pushes the image to DockerHub
 - Deploy to Kubernetes	              = Deploys the app using kubectl apply to a K8s cluster
+```
