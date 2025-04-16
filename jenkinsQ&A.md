@@ -26,12 +26,24 @@ Steps for Configuring Nexus with Maven in Jenkins DSL Pipeline
    - The settings.xml should contain the Nexus server URL and credentials.
 ```xml
 <servers>
-  <server>
-    <id>nexus-releases</id>
-    <username>${env.NEXUS_USERNAME}</username>
-    <password>${env.NEXUS_PASSWORD}</password>
-  </server>
+    <server>
+        <id>nexus-releases</id>
+        <username>${env.NEXUS_USERNAME}</username>
+        <password>${env.NEXUS_PASSWORD}</password>
+    </server>
 </servers>
+
+<profiles>
+    <profile>
+        <id>nexus</id>
+        <repositories>
+            <repository>
+                <id>nexus-releases</id>
+                <url>https://nexus.yourcompany.com/repository/maven-releases/</url>
+            </repository>
+        </repositories>
+    </profile>
+</profiles>
 ```
 4. Create a Jenkins DSL Pipeline Script:
 - Now, you will configure the Jenkins DSL pipeline that defines the build, test, and deploy stages for your Maven project.
