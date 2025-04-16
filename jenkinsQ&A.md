@@ -109,4 +109,12 @@ pipeline {
     }
 }
 ```     
-     
+5. Summary of Steps:
+   - Set up Nexus repositories (Maven hosted).
+   - Configure Jenkins Maven and Nexus credentials.
+   - Write the DSL pipeline to:
+      - Checkout the code.
+      - Build and test with Maven.
+      - Deploy artifacts to Nexus using mvn deploy.
+   - Configure pom.xml for Nexus deployment.
+   - Ensure settings.xml in Jenkins handles Nexus credentials securely.
