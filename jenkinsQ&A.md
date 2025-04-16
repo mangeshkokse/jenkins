@@ -57,6 +57,16 @@ Steps for Configuring Nexus with Maven in Jenkins DSL Pipeline
 </servers>
 ```
 4. Create a stage for artifact deployment. `mvn deploy`
-
+- In jenkins configure stage with pipeline script `withMaven:Provide Maven Environment` with `Jdk` also global settings.
+```groovy
+stage('Publish Artifacts to Nexus') {
+            steps {
+                withMaven(globalMavenSettingsConfig: 'global-Maven-settings', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+                    sh "mvn deploy"   # It will deploy artifacts to nexux
+                }
+            }
+        }
+```
+- `global-Maven-settings` - Name of the setting.xml configuration
 
 
