@@ -56,5 +56,7 @@ Steps for Configuring Nexus with Maven in Jenkins DSL Pipeline
     </server>
 </servers>
 ```
+4. Create a stage for artifact deployment. `mvn deploy`
+
 
 
