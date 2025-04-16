@@ -17,6 +17,10 @@
 | Deploy to Kubernetes             | Deploys the app using `kubectl apply` to a Kubernetes cluster                   |
 ----------------------------------------------------------------------------------------------------------------------
 ```
+  
+- https://www.youtube.com/watch?v=Ww-Hh_WdzWw&t=1104s
+- https://www.youtube.com/watch?v=Ww-Hh_WdzWw
+
 
 - **Q:** Where does Jenkins store the default password?
 - **Q:** Who is the user of Jenkins to execute shell?  
@@ -46,13 +50,24 @@
 - **Q:** What is a Build Parameter and its use case?
 - **Q:** Types of Build Parameters.
 - **Q:** What is Timeout in a Jenkins job?
-- **Q:** How to run parallel jobs or concurrent jobs in Jenkins?
+- **Q:** How to run parallel jobs or concurrent jobs in Jenkins
 - **Q:** What is Workspace in Jenkins and its use case?
 - **Q:** What is Upstream and Downstream in Jenkins?
 - **Q:** How does Artifact Management work in Jenkins?
 - **Q:** What is Master-Slave in Jenkins and its use case?
 - **Q:** How to achieve a particular job running on a specific slave node in Jenkins?
 - **Q:** What is Shared Library in Jenkins?
-  
-- https://www.youtube.com/watch?v=Ww-Hh_WdzWw&t=1104s
-https://www.youtube.com/watch?v=Ww-Hh_WdzWw
+
+
+## Q. How are artifacts managed by jenkins.
+- In Jenkins, artifacts are the files generated as part of a build, such as binaries, reports, logs, or compiled code. Here's how artifacts are typically managed in Jenkins:
+   1. Archive Artifacts
+      - Jenkins allows you to archive artifacts using the "Archive the artifacts" post-build action in job configuration by UI
+      - Use the archiveArtifacts step to store build outputs (e.g., JARs, logs, reports) in Jenkins:
+        ```groovy
+        archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+        ```
+      - `artifacts:` Glob pattern of files to archive.
+      - `fingerprint: true:` Enables tracking across builds.
+
+
