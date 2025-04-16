@@ -64,10 +64,94 @@
    1. Archive Artifacts
       - Jenkins allows you to archive artifacts using the "Archive the artifacts" post-build action in job configuration by UI
       - Use the archiveArtifacts step to store build outputs (e.g., JARs, logs, reports) in Jenkins:
-        ```groovy
+      ```groovy
         archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
-        ```
+        ```      
       - `artifacts:` Glob pattern of files to archive.
       - `fingerprint: true:` Enables tracking across builds.
 
+  2. Stashing & Unstashing (for multi-stage pipelines)
+      - Use stash to temporarily save files, and unstash to retrieve them in another stage:
+```groovy
+stage('Build') {
+  steps {
+    sh 'make build'
+    stash includes: 'build/**', name: 'build-artifacts'
+  }
+}
 
+stage('Test') {
+  steps {
+    unstash 'build-artifacts'
+    sh 'make test'
+  }
+}
+```
+ 3. Publishing to Artifact Repositories
+```groovy
+sh '''
+  curl -u user:pass -T build/libs/app.jar https://nexus.example.com/repository/maven-releases/
+'''
+```
+ - Or use plugins:
+    - Nexus Artifact Uploader Plugin
+    - jfrog Artifactory Plugin
+    - S3 Publisher Plugin
+      
+4. Artifacts in Declarative Pipelines configure Nexus in a Jenkins DSL pipeline,
+   - Option 1: Using sh or curl to upload to Nexus
+```groovy
+pipeline {
+  agent any
+
+  environment {
+    NEXUS_URL = 'http://nexus.example.com/repository/maven-releases/'
+    NEXUS_USER = credentials('nexus-username')   // Jenkins credential ID
+    NEXUS_PASSWORD = credentials('nexus-password')
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+
+    stage('Upload to Nexus') {
+      steps {
+        sh '''
+          curl -u $NEXUS_USER:$NEXUS_PASSWORD \
+            --upload-file target/my-app.jar \
+            $NEXUS_URL/com/example/my-app/1.0.0/my-app-1.0.0.jar
+        '''
+      }
+    }
+  }
+}
+```
+- Option 2: Using the Nexus Artifact Uploader Plugin
+   - If you're using classic jobs or scripted pipelines, you can use the plugin. First, install Nexus Artifact Uploader Plugin.
+```groovy
+node {
+  stage('Build') {
+    sh 'mvn clean package'
+  }
+
+  stage('Upload to Nexus') {
+    nexusArtifactUploader(
+      nexusVersion: 'nexus3',
+      protocol: 'http',
+      nexusUrl: 'nexus.example.com',
+      groupId: 'com.example',
+      version: '1.0.0',
+      repository: 'maven-releases',
+      credentialsId: 'nexus-creds',
+      artifacts: [
+        [artifactId: 'my-app', classifier: '', file: 'target/my-app.jar', type: 'jar']
+      ]
+    )
+  }
+}
+```
+
+ 
