@@ -3,118 +3,58 @@
 ## How artifacts get stored in Nexus.
 Steps for Configuring Nexus with Maven in Jenkins DSL Pipeline
 1. Set Up Nexus Repository:
-   - Nexus repository needs to be configured to store your Maven artifacts (like .jar, .war, .pom).
-     - Log into Nexus.
-     - Create a Maven hosted repository (e.g., `maven-releases`, `maven-snapshots`).
-     - For each repository, get the repository URL (you will need this for Jenkins to deploy artifacts).
+- Before proceeding with configuring your Maven project, ensure your Nexus repository is properly set up:
+- Nexus repository needs to be configured to store your Maven artifacts (like .jar, .war, .pom).
+  - Log into Nexus.
+  - Create a Maven hosted repository (e.g., `maven-releases`, `maven-snapshots`).
+  - For each repository, get the repository URL (you will need this for Jenkins to deploy artifacts).
+- `Example Nexus URLs:`
+   - `https://nexus.company.com/repository/maven-releases/`
+   - `https://nexus.company.com/repository/maven-snapshots/`
 
-2. Configure Maven in Jenkins:
-   - Go to Jenkins > Manage Jenkins > Global Tool Configuration.
-   - Set up Maven:
-     - Name: maven3 (or any name you prefer).
-     - Maven Version: Choose the installed Maven version (e.g., 3.6.3).
-     - Install automatically (optional).
-   - Add JDK Configuration:
-     - Name: jdk17 (or your desired version).
-     - Set up the JDK path or let Jenkins auto-install it.
-            
-3. Configure Maven Settings in Jenkins:
-   - In Jenkins, go to Manage Jenkins > Configure System.
-   - Add your Nexus credentials (Username and Password or token) under Maven Settings:
-   - Maven Settings Config: This points to the settings.xml or pom.xml file, which contains Nexus credentials.
-   - Use global-settings or create a custom one.
-   - The settings.xml should contain the Nexus server URL and credentials.
+2. Configure `pom.xml`
+- Your `pom.xml` file tells Maven where to deploy the built artifact (e.g., JAR, WAR, etc.) once the build completes. The main section that you’ll need to add is `distributionManagement.`
+  a. Distribution Management in pom.xml:
+  - In the pom.xml, specify the Nexus repositories under the distributionManagement section.
+  ```xml
+  <distributionManagement>
+    <!-- Release repository -->
+    <repository>
+        <id>nexus-releases</id>
+        <url>https://nexus.company.com/repository/maven-releases/</url>
+    </repository>
+
+    <!-- Snapshot repository -->
+    <snapshotRepository>
+        <id>nexus-snapshots</id>
+        <url>https://nexus.company.com/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+  ```
+ - Explanation:
+   - `id`: This should be a unique identifier for each repository, which will also be used in settings.xml for authentication.
+   - `url`: The URL pointing to your Nexus repository, which will either be the releases or snapshots repository depending on the version of your artifact.
+     
+**Note: You must configure both a release repository and a snapshot repository if you plan to deploy both stable and development versions.**
+       
+3. Configure Credentials in `settings.xml`, which we will get in Jenkins by the plugin `config file provider`
+- Since Nexus requires authentication (username and password), Maven needs to be informed of how to authenticate when deploying artifacts. This is done through the `settings.xml` file.
+- Manage Jenkins - Manage Files (Plugin - Config File Provider) - here we will get `settings.xml`
+- In that setting.xml, we need to provide the "ID" and "username-password" of the Nexus Maven-hosted repository (e.g., `maven-releases`, `maven-snapshots`).
+**Note- `maven-releases` for production servers and `maven-snapshots` for lower envirenment server.**
 ```xml
 <servers>
     <server>
-        <id>nexus-releases</id>
+        <id>nexus-releases</id> <!-- This must match the id in pom.xml -->
+        <username>${env.NEXUS_USERNAME}</username>
+        <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+    <server>
+        <id>nexus-snapshots</id> <!-- This must match the id in pom.xml -->
         <username>${env.NEXUS_USERNAME}</username>
         <password>${env.NEXUS_PASSWORD}</password>
     </server>
 </servers>
-
-<profiles>
-    <profile>
-        <id>nexus</id>
-        <repositories>
-            <repository>
-                <id>nexus-releases</id>
-                <url>https://nexus.yourcompany.com/repository/maven-releases/</url>
-            </repository>
-        </repositories>
-    </profile>
-</profiles>
 ```
-4. Create a Jenkins DSL Pipeline Script:
-- Now, you will configure the Jenkins DSL pipeline that defines the build, test, and deploy stages for your Maven project.
-```groovy
-pipeline {
-    agent any
 
-    environment {
-        NEXUS_URL = 'https://nexus.company.com/repository/maven-releases/'
-        NEXUS_USERNAME = credentials('nexus-username')  // Use Jenkins Credentials Plugin
-        NEXUS_PASSWORD = credentials('nexus-password')
-    }
 
-    tools {
-        maven 'maven3'  // Use Maven tool installed in Jenkins
-        jdk 'jdk17'     // Use JDK 17
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout source code from repository
-                git 'https://github.com/yourorg/yourrepo.git'
-            }
-        }
-
-        stage('Build and Test') {
-            steps {
-                script {
-                    // Run Maven build and tests
-                    sh "mvn clean test"
-                }
-            }
-        }
-
-        stage('Publish to Nexus') {
-            steps {
-                script {
-                    // Configure Maven settings with Nexus repo details
-                    withMaven(globalMavenSettingsConfig: 'global-settings', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
-                        // Deploy artifacts to Nexus repository
-                        sh "mvn deploy -DskipTests"
-                    }
-                }
-            }
-        }
-
-        stage('Clean up') {
-            steps {
-                // Clean up the workspace after deployment
-                cleanWs()
-            }
-        }
-    }
-
-    post {
-        success {
-            echo "Build and deploy completed successfully!"
-        }
-        failure {
-            echo "Build or deploy failed!"
-        }
-    }
-}
-```     
-5. Summary of Steps:
-   - Set up Nexus repositories (Maven hosted).
-   - Configure Jenkins Maven and Nexus credentials.
-   - Write the DSL pipeline to:
-      - Checkout the code.
-      - Build and test with Maven.
-      - Deploy artifacts to Nexus using mvn deploy.
-   - Configure pom.xml for Nexus deployment.
-   - Ensure settings.xml in Jenkins handles Nexus credentials securely.
